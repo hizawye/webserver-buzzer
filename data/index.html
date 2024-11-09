@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESP32 Buzzer Control</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f5;
+      color: #333;
+    }
+
+    .container {
+      text-align: center;
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 300px;
+    }
+
+    h1 {
+      color: #4a90e2;
+      margin-bottom: 1rem;
+    }
+
+    .buzzer-btn {
+      background-color: #4a90e2;
+      border: none;
+      color: #ffffff;
+      padding: 12px 24px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+      outline: none;
+    }
+
+    .buzzer-btn:hover {
+      background-color: #357ab7;
+    }
+
+    .status {
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ESP32 Buzzer Control</h1>
+    <button class="buzzer-btn" onclick="toggleBuzzer()">Toggle Buzzer</button>
+    <div id="status" class="status">Buzzer is OFF</div>
+  </div>
+
+  <script>
+    async function toggleBuzzer() {
+      try {
+        const response = await fetch('/buzz/toggle');
+        const statusText = await response.text();
+        document.getElementById('status').innerText = statusText;
+      } catch (error) {
+        console.error('Error toggling buzzer:', error);
+      }
+    }
+  </script>
+</body>
+</html>

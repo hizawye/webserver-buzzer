@@ -1,43 +1,70 @@
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
+#include <SPIFFS.h>
 
-// Replace with your network credentials
+// Network credentials
 const char* ssid = "C";
 const char* password = "rahimc12";
 
-// Create an AsyncWebServer object on port 1234
-AsyncWebServer server(1234);
+// Web server running on port 80
+AsyncWebServer server(80);
+
+// Buzzer setup
+const int buzzerPin = 23;  // GPIO pin for the buzzer
+bool buzzerState = false;  // Buzzer is initially off
 
 void setup() {
-  // Start the Serial Monitor at 115200 baud
+  // Start Serial Monitor for debugging
   Serial.begin(115200);
 
-  // Connect to Wi-Fi
+  // Initialize Wi-Fi connection
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.println("Connecting to WiFi...");
   }
-  
-  // Print ESP32 local IP address
   Serial.println("Connected to WiFi!");
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
 
-  // Serve a simple HTML page at the root ("/") endpoint
+  // Initialize SPIFFS for file handling
+  if (!SPIFFS.begin(true)) {
+    Serial.println("SPIFFS Mount Failed");
+    return;
+  } else {
+    Serial.println("SPIFFS Mounted Successfully");
+  }
+
+  // List all files to confirm "index.html" exists
+  File root = SPIFFS.open("/");
+  File file = root.openNextFile();
+  while (file) {
+    Serial.print("FILE: ");
+    Serial.println(file.name());
+    file = root.openNextFile();
+  }
+
+  // Configure the buzzer pin as output and turn it off initially
+  pinMode(buzzerPin, OUTPUT);
+  digitalWrite(buzzerPin, LOW);
+
+  // Route to serve the HTML file
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(200, "text/html", "<h1>Hello, ESP32 Web Server!</h1>");
+    request->send(SPIFFS, "/index.html", "text/html");
   });
 
-  // Serve a simple response for another path ("/status")
-  server.on("/status", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(200, "text/plain", "Server is running!");
+  // Endpoint to toggle the buzzer state
+  server.on("/buzz/toggle", HTTP_GET, [](AsyncWebServerRequest *request){
+    buzzerState = !buzzerState; // Toggle the buzzer state
+    digitalWrite(buzzerPin, buzzerState ? HIGH : LOW); // Update the buzzer
+    Serial.println(buzzerState ? "Buzzer ON" : "Buzzer OFF"); // Debug message
+    request->send(200, "text/plain", buzzerState ? "Buzzer ON" : "Buzzer OFF");
   });
 
-  // Start the server
+  // Start the web server
   server.begin();
 }
 
 void loop() {
-  // Nothing is needed here as the server is running asynchronously
+  // Empty loop since server runs asynchronously
 }
