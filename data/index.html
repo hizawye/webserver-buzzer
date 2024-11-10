@@ -14,32 +14,40 @@
       margin: 0;
       background-color: #f0f0f5;
       color: #333;
+      padding: 0 1rem;
+      box-sizing: border-box;
     }
 
     .container {
       text-align: center;
       background-color: #ffffff;
-      padding: 2rem;
+      padding: 1.5rem;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      width: 300px;
+      max-width: 100%;
+      width: 100%;
+      max-width: 350px;
+      box-sizing: border-box;
     }
 
     h1 {
       color: #4a90e2;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
     }
 
     .buzzer-btn {
       background-color: #4a90e2;
       border: none;
       color: #ffffff;
-      padding: 12px 24px;
-      font-size: 1.2rem;
+      padding: 14px;
+      font-size: 1.1rem;
       cursor: pointer;
       border-radius: 8px;
       transition: background-color 0.3s;
-      outline: none;
+      width: 100%;
+      max-width: 280px;
+      margin: 0 auto;
     }
 
     .buzzer-btn:hover {
@@ -50,6 +58,36 @@
       margin-top: 1rem;
       font-size: 1rem;
       color: #333;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.4rem;
+      }
+
+      .buzzer-btn {
+        padding: 12px;
+        font-size: 1rem;
+      }
+
+      .status {
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      h1 {
+        font-size: 1.2rem;
+      }
+
+      .buzzer-btn {
+        padding: 10px;
+        font-size: 0.9rem;
+      }
+
+      .status {
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
