@@ -2,9 +2,9 @@
 #include <ESPAsyncWebServer.h>
 #include <SPIFFS.h>
 
-// Network credentials
-const char* ssid = "C";
-const char* password = "rahimc12";
+// Network credentials (loaded from .env file via build script)
+const char* ssid = WIFI_SSID;
+const char* password = WIFI_PASSWORD;
 
 // Web server running on port 80
 AsyncWebServer server(80);
